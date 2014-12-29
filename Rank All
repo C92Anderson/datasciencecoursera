@@ -1,0 +1,86 @@
+
+
+rankall <- function(outcome,num = "best") {
+
+data  <- read.csv("outcome-of-care-measures.csv", colClass="character", na.strings="Not Available")
+state_list <- as.vector(unique(data[,7]))
+state_list <- state_list[ order(state_list)]
+
+call <- data.frame()
+
+if(outcome == 'heart attack') {
+
+	data[,11] <- as.numeric(data[,11])
+	bad <- is.na(data[,11])
+	clean_data <- as.data.frame(data[!bad, ])
+
+sorted <- as.data.frame(clean_data[ order(clean_data[,7], clean_data[,11],clean_data[,2]),c(2,7,11) ])
+
+if (num=="best") {
+for (i in seq_along(state_list)) {
+state_data<- sorted[sorted[,2]==state_list[i],c(1:2)]
+call <- rbind(call,head(state_data,n=1))
+}
+} else if (num=="worst") {
+for (i in seq_along(state_list)) {
+state_data<- sorted[sorted[,2]==state_list[i],c(1:2)]
+call <- rbind(call,tail(state_data,n=1))
+}
+} else {
+for (i in seq_along(state_list)) {
+state_data<- sorted[sorted[,2]==state_list[i],1]
+call <- rbinSd(call,cbind(state_data[num],state_list[i]))
+}
+}
+} else if (outcome == 'heart failure') {
+
+	data[,17] <- as.numeric(data[,17])
+	bad <- is.na(data[,17])
+	clean_data <- data[!bad, ]
+
+sorted <- clean_data[ order(clean_data[,7], clean_data[,17],clean_data[,2]),c(2,7,17) ]
+
+if (num=="best") {
+for (i in seq_along(state_list)) {
+state_data<- sorted[sorted[,2]==state_list[i],c(1:2)]
+call <- rbind(call,head(state_data,n=1))
+}
+} else if (num=="worst") {
+for (i in seq_along(state_list)) {
+state_data<- sorted[sorted[,2]==state_list[i],c(1:2)]
+call <- rbind(call,tail(state_data,n=1))
+}
+} else {
+for (i in seq_along(state_list)) {
+state_data<- sorted[sorted[,2]==state_list[i],1]
+call <- rbind(call,cbind(state_data[num],state_list[i]))
+}
+}
+ } else if (outcome == 'pneumonia') {
+
+	data[,23] <- as.numeric(data[,23])
+	bad <- is.na(data[,23])
+	clean_data <- data[!bad, ]
+
+sorted <- clean_data[ order(clean_data[,7], clean_data[,23],clean_data[,2]),c(2,7,23) ]
+
+if (num=="best") {
+for (i in seq_along(state_list)) {
+state_data<- sorted[sorted[,2]==state_list[i],c(1:2)]
+call <- rbind(call,head(state_data,n=1))
+}
+} else if (num=="worst") {
+for (i in seq_along(state_list)) {
+state_data<- sorted[sorted[,2]==state_list[i],c(1:2)]
+call <- rbind(call,tail(state_data,n=1))
+}
+} else {
+for (i in seq_along(state_list)) {
+state_data<- sorted[sorted[,2]==state_list[i],1]
+call <- rbind(call,cbind(state_data[num],state_list[i]))
+}
+}
+}
+names(call) <- c("hospital","state")
+suppressWarnings(return(call))
+}
