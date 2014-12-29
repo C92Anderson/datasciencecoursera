@@ -1,0 +1,51 @@
+install.packages("foreach")
+install.packages("randomForest")
+install.packages("e1071")
+
+####create sample data
+set.seed(10)
+y<-c(1:1000)
+x1<-c(1:1000)*runif(1000,min=0,max=2)
+x2<-c(1:1000)*runif(1000,min=0,max=2)
+x3<-c(1:1000)*runif(1000,min=0,max=2)
+
+###standard linear model
+lm_fit<-lm(y~x1+x2+x3)
+summary(lm_fit)
+
+###training/testing
+set.seed(10)
+all_data<-data.frame(y,x1,x2,x3)
+positions <- sample(nrow(all_data),size=floor((nrow(all_data)/4)*3))
+training<- all_data[positions,]
+testing<- all_data[-positions,]
+
+###model on the training, testing
+lm_fit<-lm(y~x1+x2+x3,data=training)
+predictions<-predict(lm_fit,newdata=testing)
+error<-sqrt((sum((testing$y-predictions)^2))/nrow(testing))
+
+###loop through to cut up data
+library(foreach)
+length_divisor<-4
+iterations<-1000
+predictions<-foreach(m=1:iterations,.combine=cbind) %do% {
+training_positions <- sample(nrow(training), size=floor((nrow(training)/length_divisor)))
+train_pos<-1:nrow(training) %in% training_positions
+lm_fit<-lm(y~x1+x2+x3,data=training[train_pos,])
+predict(lm_fit,newdata=testing)
+}
+predictions<-rowMeans(predictions)
+error<-sqrt((sum((testing$y-predictions)^2))/nrow(testing))
+
+###testing different iterations
+bagging<-function(training,testing,length_divisor=4,iterations=1000)
+{
+predictions<-foreach(m=1:iterations,.combine=cbind) %do% {
+training_positions <- sample(nrow(training), size=floor((nrow(training)/length_divisor)))
+train_pos<-1:nrow(training) %in% training_positions
+lm_fit<-lm(y~x1+x2+x3,data=training[train_pos,])
+predict(lm_fit,newdata=testing)
+}
+rowMeans(predictions)
+}
