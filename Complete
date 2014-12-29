@@ -1,0 +1,27 @@
+setwd("C:/Users/canderson/Documents/R/specdata")
+
+specdata <- "C:/Users/canderson/Documents/R/specdata"
+
+
+complete <- function(directory,id=1:332) {
+
+id_full <- list.files("C:/Users/canderson/Documents/R/specdata",full.names=TRUE)
+
+table1 <- data.frame(id=integer(0), nobs=integer(0))
+fill <- 0
+	for (i in id) {
+	data <- read.csv(id_full[i])
+
+	good <- complete.cases(data)
+	data_clean <- data[good, ]
+if (length(data_clean[,4]) > 0 ) {
+	col1 <- cbind(unique(data_clean$"ID"),length(data_clean$"ID"))
+	table1 <- rbind(table1,col1)
+	} else {
+	col1 <- cbind(unique(data$"ID"),length(data_clean$"ID"))
+	table1 <- rbind(table1,col1)
+	}
+	}
+names(table1) <- list("id","nobs")
+return(table1)
+	} 
