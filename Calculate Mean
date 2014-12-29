@@ -1,0 +1,17 @@
+setwd("C:/Users/canderson/Documents/R/specdata")
+
+specdata <- "C:/Users/canderson/Documents/R/specdata"
+
+
+
+pollutantmean <- function(directory,pollutant,id=1:332) {
+
+id_full <- list.files("C:/Users/canderson/Documents/R/specdata",full.names=TRUE)
+data_all <- data.frame()
+	for (i in 1:332) {
+		data_all <- rbind(data_all, read.csv(id_full[i]))
+	}
+data_sub <- data_all[which(data_all[ ,"ID"] %in% id), ]
+	round(mean(data_sub [ ,pollutant], na.rm=TRUE),3)
+
+}
