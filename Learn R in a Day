@@ -1,0 +1,140 @@
+a <- 346
+b <- 354
+c <- b-a
+c
+
+d <- b/a
+d
+
+multiplier <- function(x,y,z){
+  result <- x * y * z
+  print(result)
+}
+
+multiplier(12.8,19.2,pi)
+
+list=ls()
+
+rm(list=ls()) ###CLEAR GLOBAL ENVIRONMENT
+
+a <-60:85
+a[12]
+a[20]
+a[c(5,20)]
+
+a[c(4,8,12,16,20,24)]   
+a[seq(from=4,to=24,by=4)]
+
+new_frame <- data.frame(X=33:47, Y=seq(from=115,to=157,by=3), Z=seq(from=10,length=15,by=-8.5))
+
+mean_ozone <- round(mean(airquality[,1],na.rm=TRUE),digits=2)
+
+any(is.na(airquality$Temp)) ### TRUE OR FALSE
+
+###CREATE NEW TEMP C FIELD
+converter <- function(TF){
+  TC=round((5/9)*(TF-32),digits=1)
+  print(TC)
+}
+
+aq2 <- as.data.frame(cbind(airquality,tempC=converter(airquality$Temp)))
+
+###FIND DAYS WITH MAX AND MIN TEMP
+max_day <- airquality[which(airquality$Temp==max(airquality$Temp)),5:6]
+min_day <- airquality[which(airquality$Temp==min(airquality$Temp)),5:6]
+
+########WHICH###########
+###COUNT DAYS WITH WIND UNDER 4
+length(which(airquality$Wind <=4, ))
+
+####USE WHICH TO KEEP DAYS OVER 300
+airquality[(which(airquality$Solar.R >300)), ]
+
+###2 different medians
+median(airquality[,1],na.rm=TRUE)
+summary(airquality[,1])
+
+###correlation tests
+corr_test <-function(var){
+  cor.test(airquality$Ozone,airquality$as.character(var))
+}
+corr_test(Wind)
+
+cor.test(airquality$Ozone,airquality$Wind)
+cor.test(airquality$Ozone,airquality$Temp)
+cor.test(airquality$Ozone,airquality$Solar.R)
+
+###MEAN WHICH
+mean(ToothGrowth[which(ToothGrowth$supp=="OJ" & ToothGrowth$dose==2.0),1])
+
+###IF STATEMENTS
+x<-10
+y<-25
+if (x<y){
+  print("statement correct")
+} else {
+  print("statement is not correct")
+}
+
+z<-50
+ifelse(x>y,"true,x gt y",ifelse(x>z,"one true, one false","both false"))
+
+###FOR EACH
+for (i in 1:20){
+  print(i*3)
+}
+
+for (i in 5:10){
+  print((i^2-i))
+}
+
+select_letters <-c("P","I","R","A","T","E")
+for(k in select_letters){
+  print(k)
+}
+
+
+p <- -10
+while(p>=-20){
+  print(p)
+  p <- p-1
+}
+
+h <- 10
+j <- -5
+if(h<j){
+  print("statement is true")
+} else {
+  while(h>=j){
+    print(h)
+    h <- h-1
+}
+}
+
+if (h<j){
+  print("statement is true")
+} else {
+  for (i in h:j){
+    print(h)
+    h <- h-1
+  }
+
+nottem_castle <- read.table("C:/Users/canderson/Documents/R/nottem.txt",header=TRUE)
+nott_cel <- round((5/9)*nottem_castle-32,digits=1) 
+nott_cel$AnnualMean <- cbind(round(rowMeans(nott_cel),digits=1))
+write.table(nott_cel,"nott_castle_celius.txt",col.names=NA, row.names=TRUE, quote=FALSE, sep="\t")
+
+plot(sunspot.year,xlab="Year",ylab="Sunspot Count", xlim=c(1700,2000), ylim=c(0,200),las=1,lty=1,lwd=2, col="darkorange")
+title("Sunspot Count Obs 1700-1988")
+
+plot(airquality$Ozone, airquality$Temp, xlab="ozone Concentration  (ppb)", ylab="Temperature (F)",xlim=c(0,180),ylim=c(50,100),
+     las=1 , pch=18, col="red", cex=1.2)
+
+par(mar=c(5,5,5,4))
+
+plot(airquality$Ozone,airquality$Wind, axes=FALSE, xlab="",ylab="",xlim=c(0,180),ylim=c(0,21), las=1, pch=4,col="slateblue",cex=0.75)
+axis(side=4, las=1)
+abline(lm(airquality$Wind ~ airquality$Ozone),col="slateblue",lty=2,lwd=1.5)
+mtext(side=4,line=2.5,"Wind Speed")
+title("Daily Air Quality in NY")
+legend("bottomleft",c("Temp","Wind"),pch=c(18,4),pt.cex=c(1.2,0.75),col=c("red","Slateblue"),bty="n")
