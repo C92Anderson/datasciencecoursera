@@ -1,0 +1,39 @@
+
+
+best <- function(state, outcome) {
+
+data  <- read.csv("outcome-of-care-measures.csv", colClass="character", na.strings="Not Available")
+
+
+if(outcome == 'heart attack') {
+state_data<- data[data[,7]==state, ]
+	stop("invalid state")
+	state_data[,11] <- as.numeric(state_data[,11])
+	bad <- is.na(state_data$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack)
+ clean_state <- state_data[!bad,]
+   min <- min(clean_state$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack)
+   result <- clean_state[which(clean_state$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack==min),]
+ 
+} else if (outcome == 'heart failure') {
+
+state_data<- data[data[,7]==state, ]
+	stop("invalid state")
+	state_data$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure <- as.numeric(state_data$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure)
+	bad <- is.na(state_data$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure)
+ clean_state <- state_data[!bad,]
+  min <- min(clean_state$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure)
+   result <- clean_state[which(clean_state$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure==min),]
+
+ } else if (outcome == 'pneumonia') {
+state_data<- data[data[,7]==state, ]
+	stop("invalid state")
+	state_data$Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia <- as.numeric(state_data$Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia)
+	bad <- is.na(state_data$Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia)
+ clean_state <- state_data[!bad,]
+
+  min <- min(clean_state$Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia)
+ result <- clean_state[which(clean_state$Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia==min),]
+}
+result[,2]
+}
+
