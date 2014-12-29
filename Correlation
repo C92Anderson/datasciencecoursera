@@ -1,0 +1,25 @@
+setwd("C:/Users/canderson/Documents/R/specdata")
+
+specdata <- "C:/Users/canderson/Documents/R/specdata"
+
+
+corr <- function(directory, threshold = 0) {
+
+id_full <- list.files("C:/Users/canderson/Documents/R/specdata",full.names=TRUE)
+
+corr_no <- numeric(0)  ##empty dataset
+
+	for (i in 1:332) {
+	data <- read.csv(id_full[i])
+
+	good <- complete.cases(data)
+	data_clean <- data[good, ]
+	if (length(data_clean$"sulfate") > threshold) {
+	cor1 <- cor(data_clean[ ,2],data_clean[,3])
+	corr_no <- c(corr_no,cor1)
+	}
+}
+return(corr_no)
+}
+
+
